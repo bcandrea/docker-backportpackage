@@ -1,0 +1,15 @@
+#!/bin/bash
+if [[ $# -eq 3 ]]; then
+  mkdir -p $PWD/pkg
+  docker run --rm -it --privileged \
+    -v $PWD/pkg:/var/lib/backports -v $HOME/.gnupg:/root/.gnupg \
+    -e DEBFULLNAME -e DEBEMAIL -e DEBSIGN_KEYID \
+    bcandrea/backportpackage $@
+elif [[ $# -eq 4 ]]; then
+  docker run --rm -it -v $HOME/.gnupg:/root/.gnupg \
+    -e DEBFULLNAME -e DEBEMAIL -e DEBSIGN_KEYID \
+    bcandrea/backportpackage $@
+else
+  echo "usage: backport <package> <source distro> <target distro> [<ppa>]"
+  exit 1
+fi
